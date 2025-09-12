@@ -1,3 +1,16 @@
+# Data
+data/raw/*
+!data/raw/.gitkeep
+data/interim/
+data/processed/
+data/splits/
+
+# DVC cache
+.dvc/
+
+# VSCode
+.vscode/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

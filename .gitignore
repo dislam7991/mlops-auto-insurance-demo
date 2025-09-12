@@ -1,6 +1,7 @@
 # Data
 data/raw/*
 !data/raw/.gitkeep
+!data/raw/*.dvc
 data/interim/
 data/processed/
 data/splits/

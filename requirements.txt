@@ -9,3 +9,6 @@ uvicorn[standard]
 evidently
 pandera
 pyyaml
+dagshub
+matplotlib
+seaborn

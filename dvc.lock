@@ -1,0 +1,154 @@
+schema: '2.0'
+stages:
+  extract:
+    cmd: python -m cli.extract --params params.yaml
+    deps:
+    - path: autoinsurance/etl/extract.py
+      hash: md5
+      md5: bc69e4c922edd519c90ca2a82b9c56c3
+      size: 248
+    - path: cli/extract.py
+      hash: md5
+      md5: 94a5c45f9e0e06ac9b98cb54e5fab210
+      size: 258
+    - path: data/raw/insurance_claims_complete.csv
+      hash: md5
+      md5: 2313f117442763649acfce4083de83d6
+      size: 264584
+    - path: params.yaml
+      hash: md5
+      md5: e2755479580e1f0b0c9294b9f16ff4e8
+      size: 291
+    outs:
+    - path: data/interim/insurance_interim.parquet
+      hash: md5
+      md5: 3d52fe92465fb4bb0dea0f7726fbaef5
+      size: 96906
+  transform:
+    cmd: python -m cli.transform --params params.yaml
+    deps:
+    - path: autoinsurance/etl/transform.py
+      hash: md5
+      md5: 327b938d2e687ab391f89e12389a91ff
+      size: 840
+    - path: cli/transform.py
+      hash: md5
+      md5: c4a7d513e26b0ccf8bd99e4e74ecd8ff
+      size: 264
+    - path: data/interim/insurance_interim.parquet
+      hash: md5
+      md5: 3d52fe92465fb4bb0dea0f7726fbaef5
+      size: 96906
+    - path: params.yaml
+      hash: md5
+      md5: e2755479580e1f0b0c9294b9f16ff4e8
+      size: 291
+    outs:
+    - path: data/processed/dataset.parquet
+      hash: md5
+      md5: 3d979f8cf68472f062e8a098a65e451a
+      size: 96913
+  split:
+    cmd: python -m cli.split --params params.yaml
+    deps:
+    - path: cli/split.py
+      hash: md5
+      md5: 56da2a0c4d52c846406d366b4eb7cc95
+      size: 261
+    - path: data/processed/dataset.parquet
+      hash: md5
+      md5: 3d979f8cf68472f062e8a098a65e451a
+      size: 96913
+    - path: params.yaml
+      hash: md5
+      md5: e2755479580e1f0b0c9294b9f16ff4e8
+      size: 291
+    outs:
+    - path: data/splits/test.parquet
+      hash: md5
+      md5: 74b034a9d9fb141bf1959668b580904c
+      size: 41782
+    - path: data/splits/train.parquet
+      hash: md5
+      md5: 6037ec88ed4611ac2b89780b021a4160
+      size: 83984
+  train:
+    cmd: python -m cli.train --params params.yaml
+    deps:
+    - path: autoinsurance/pipeline/train.py
+      hash: md5
+      md5: 9c75de0131cc85c08dac1326e09c2651
+      size: 1754
+    - path: cli/train.py
+      hash: md5
+      md5: 104a3d920a8ee86eb0afd935bf8b157c
+      size: 265
+    - path: data/splits/train.parquet
+      hash: md5
+      md5: 6037ec88ed4611ac2b89780b021a4160
+      size: 83984
+    - path: params.yaml
+      hash: md5
+      md5: e2755479580e1f0b0c9294b9f16ff4e8
+      size: 291
+    outs:
+    - path: models/model.pkl
+      hash: md5
+      md5: 94c6d2caa2097440c45c68cdef89b704
+      size: 49073
+  evaluate:
+    cmd: python -m cli.evaluate --params params.yaml
+    deps:
+    - path: autoinsurance/pipeline/evaluate.py
+      hash: md5
+      md5: 6bb8486a3ca582698458a701a6ee5d32
+      size: 1527
+    - path: cli/evaluate.py
+      hash: md5
+      md5: 91889401b04983f4f5e02c6ba51300f6
+      size: 280
+    - path: data/splits/test.parquet
+      hash: md5
+      md5: 74b034a9d9fb141bf1959668b580904c
+      size: 41782
+    - path: models/model.pkl
+      hash: md5
+      md5: 94c6d2caa2097440c45c68cdef89b704
+      size: 49073
+    - path: params.yaml
+      hash: md5
+      md5: e2755479580e1f0b0c9294b9f16ff4e8
+      size: 291
+    outs:
+    - path: reports/confusion_matrix.png
+      hash: md5
+      md5: bd3c76ecb1588ea150ef15505a075c3d
+      size: 17422
+    - path: reports/metrics.json
+      hash: md5
+      md5: 1391eab932a85b76c5b7016594983cd5
+      size: 52
+  drift_report:
+    cmd: python -m cli.drift_report --params params.yaml
+    deps:
+    - path: cli/drift_report.py
+      hash: md5
+      md5: ed2fce595572645a6e088bd87a759a66
+      size: 266
+    - path: data/splits/test.parquet
+      hash: md5
+      md5: 74b034a9d9fb141bf1959668b580904c
+      size: 41782
+    - path: data/splits/train.parquet
+      hash: md5
+      md5: 6037ec88ed4611ac2b89780b021a4160
+      size: 83984
+    - path: params.yaml
+      hash: md5
+      md5: e2755479580e1f0b0c9294b9f16ff4e8
+      size: 291
+    outs:
+    - path: reports/evidently_data_report.html
+      hash: md5
+      md5: df35c7109c6eddf9d6f148c898d28045
+      size: 4874333
